@@ -8,9 +8,12 @@ class ItunesParser:
 	"""
 	def __init__(self, path):
 		self.stream = XMLParser(open(path,'r'))
-	def piste(self, piste):
+	def piste(self, trackId, name, artist, album, genre, kind, size, total_time,
+			track_number, date_modified, date_added, bit_rate, sample_rate,
+			persistant_id, track_type, location, file_folder_count,
+			library_folder_count):
 		try:
-			print 'piste :', piste
+			print 'piste :', name
 		except UnicodeEncodeError :
 			pass
 	def album(self, album):
@@ -49,11 +52,12 @@ class ItunesParser:
 				#print indentation, data
 			if kind == START and indentation == 4:
 				if piste != {} and 'Persistent ID' in piste:
-					self.piste([
+					self.piste(
 						piste['Track ID'],
 						piste['Name'],
 						piste.get('Artist', None),
 						piste.get('Album', None),
+						piste.get('Genre', None),
 						piste.get('Kind', None),
 						piste.get('Size', None),
 						piste.get('Total Time', None),
@@ -67,7 +71,6 @@ class ItunesParser:
 						piste.get('Location', None),
 						piste.get('File Folder Count', None),
 						piste.get('Library Folder Count', None)
-						]
 						)
 					if 'Artist' in piste and piste['Artist'] not in artists:
 						artists.add(piste['Artist'])
