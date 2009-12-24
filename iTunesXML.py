@@ -18,7 +18,7 @@ class ItunesParser:
 			pass
 	def album(self, album):
 		try:
-			print 'album :', album
+			print 'album   :', album
 		except UnicodeEncodeError :
 			pass
 	def artiste(self, artiste):
@@ -51,33 +51,35 @@ class ItunesParser:
 				valeur = True
 				#print indentation, data
 			if kind == START and indentation == 4:
-				if piste != {} and 'Persistent ID' in piste:
-					self.piste(
-						piste['Track ID'],
-						piste['Name'],
-						piste.get('Artist', None),
-						piste.get('Album', None),
-						piste.get('Genre', None),
-						piste.get('Kind', None),
-						piste.get('Size', None),
-						piste.get('Total Time', None),
-						piste.get('Track Number', None),
-						piste.get('Date Modified', None),
-						piste.get('Date Added', None),
-						piste.get('Bit Rate', None),
-						piste.get('Sample Rate', None),
-						piste['Persistent ID'],
-						piste.get('Track Type', None),
-						piste.get('Location', None),
-						piste.get('File Folder Count', None),
-						piste.get('Library Folder Count', None)
-						)
-					if 'Artist' in piste and piste['Artist'] not in artists:
-						artists.add(piste['Artist'])
-						self.artiste(piste['Artist'])
-					if 'Album' in piste and piste['Album'] not in albums:
-						albums.add(piste['Album'])
-						self.album(piste['Album'])
+				if piste != {} and 'Persistent ID' in piste and piste['Name'] != None:
+					piste['Name'] = piste['Name'].strip(" \n\t\r")
+					if piste['Name'] != '':
+						self.piste(
+							piste['Track ID'],
+							piste['Name'],
+							piste.get('Artist', None),
+							piste.get('Album', None),
+							piste.get('Genre', None),
+							piste.get('Kind', None),
+							piste.get('Size', None),
+							piste.get('Total Time', None),
+							piste.get('Track Number', None),
+							piste.get('Date Modified', None),
+							piste.get('Date Added', None),
+							piste.get('Bit Rate', None),
+							piste.get('Sample Rate', None),
+							piste['Persistent ID'],
+							piste.get('Track Type', None),
+							piste.get('Location', None),
+							piste.get('File Folder Count', None),
+							piste.get('Library Folder Count', None)
+							)
+						if 'Artist' in piste and piste['Artist'] not in artists:
+							artists.add(piste['Artist'])
+							self.artiste(piste['Artist'])
+						if 'Album' in piste and piste['Album'] not in albums:
+							albums.add(piste['Album'])
+							self.album(piste['Album'])
 				piste = {}
 			if ouvrant != 'key' and kind == TEXT and valeur and indentation == 5:
 				#print "	 ", key, ":(", ouvrant, ")", unicode(data).encode('latin1', 'ignore')
