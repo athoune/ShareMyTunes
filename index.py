@@ -30,7 +30,7 @@ class Index:
 			xml_parser.piste = self.handle_piste
 			xml_parser.parse()
 		else :
-			print "deja fait"
+			print "already indexed"
 	def handle_piste(self, trackId, name, artist, album, genre, kind, size, total_time,
 		track_number, date_modified, date_added, bit_rate, sample_rate,
 		persistant_id, track_type, location, file_folder_count, 
