@@ -23,6 +23,8 @@ class Index:
 			self.empty = False
 			self.ix = FileStorage(index).open_index()
 		self.parser = QueryParser("name", schema = self.schema)
+		self.searcher = self.ix.searcher()
+		self.reader = self.ix.reader()
 	def index(self):
 		if self.empty:
 			self.writer = self.ix.writer()
@@ -41,11 +43,16 @@ class Index:
 	def query(self, query):
 		q = self.parser.parse(query)
 		print q
-		return self.ix.searcher().search(q)
+		return self.searcher.search(q)
 if __name__ == '__main__':
 	import os.path
 	index = Index(os.path.expanduser('~/Music/iTunes/iTunes Music Library.xml'))
 	index.index()
-	for response in index.query(u'tokyo*'):
-		print response
+	q = index.query(u'tokyo*')
+	print q
+	for response in q:
+		print "\t", response
+	#print dir(index.searcher)
+	print "Genres:", list(index.reader.lexicon('genre'))
+	#print list(index.reader.most_frequent_terms("name", 5))
 
