@@ -17,7 +17,9 @@ class Index:
 			name=TEXT(stored=True),
 			artist=TEXT(stored=True),
 			album=TEXT(stored=True),
-			genre=KEYWORD)
+			genre=KEYWORD,
+			location=STORED
+			)
 		if not os.path.exists(index):
 			self.empty = True
 			os.mkdir(index)
@@ -41,7 +43,7 @@ class Index:
 		persistant_id, track_type, location, file_folder_count, 
 		library_folder_count):
 			self.writer.add_document(trackId = trackId, name=name,
-				artist=artist, album=album, genre=genre)
+				artist=artist, album=album, genre=genre, location=location)
 			self.writer.commit()
 	def query(self, query):
 		q = self.parser.parse(query)
