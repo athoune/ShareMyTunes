@@ -5,6 +5,13 @@ from mutagen.id3 import ID3
 __author__ = "mlecarme"
 __version__ = "0.1"
 
+"""
+[TODO] multiple artworks
+[TODO] old artwork format
+
+http://code.google.com/p/mutagen/wiki/Tutorial
+"""
+
 class File:
 	"""File with id3
 	"""
