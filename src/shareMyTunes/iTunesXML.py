@@ -2,6 +2,9 @@
 
 from genshi.input import XMLParser, START, TEXT, END
 
+__author__ = "mlecarme"
+__version__ = "0.1"
+
 class ItunesParser:
 	"""
 	Event based iTunes XML parser

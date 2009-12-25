@@ -2,6 +2,9 @@
 
 from mutagen.id3 import ID3
 
+__author__ = "mlecarme"
+__version__ = "0.1"
+
 class File:
 	"""File with id3
 	"""

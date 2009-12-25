@@ -6,6 +6,9 @@ import os.path
 from whoosh.filedb.filestore import FileStorage
 from whoosh.qparser import QueryParser
 
+__author__ = "mlecarme"
+__version__ = "0.1"
+
 class Index:
 	def __init__(self, path, index='index'):
 		self.path = path
