@@ -52,7 +52,7 @@ if __name__ == '__main__':
 	index = Index(os.path.expanduser('~/Music/iTunes/iTunes Music Library.xml'))
 	index.index()
 	q = index.query(u'tokyo*')
-	print q
+	print "q:", dir(q)
 	for response in q:
 		print "\t", response
 	#print dir(index.searcher)
