@@ -16,5 +16,5 @@ setup(name='shareMyTunes',
       packages=['shareMyTunes'],
       package_dir={'': 'src/'},
       #scripts=['src/toto'],
-      install_requires=["genshi", "whoosh", "mutagen"]
+      install_requires=["genshi", "whoosh", "mutagen", "pybonjour"]
      )
