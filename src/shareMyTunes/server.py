@@ -44,7 +44,7 @@ class ShareMyTunes_app:
 		print uri
 		q = parse_qs(uri.query)
 		if uri.path == '/query':
-			return self.root(q)
+			return self.query(start_response, q)
 		if uri.path == '/':
 			start_response(OK, [('Content-type', HTML)])
 			return FileWrapper(open(self.root + '/data/index.html', 'r'))
@@ -62,7 +62,7 @@ class ShareMyTunes_app:
 		# The returned object is going to be printed
 		start_response(OK, [('Content-type', PLAIN)])
 		return ["Hello iTunes"]
-	def query(self, query, header = None):
+	def query(self, start_response, query, header = None):
 		start_response(OK, [('Content-type', PLAIN)])
 		response = self.index.query(unicode(query['q'][0]))
 		tas = []
