@@ -1,3 +1,19 @@
+* {
+	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+}
+
 h1 {
-	color: red;
+	font-variant: small-caps;
+}
+
+img.artwork {
+	width: 48px;
+	float: left;
+	height: 48px;
+	margin: 3px;
+}
+
+#responses li {
+	list-style-type: none;
+	clear: both;
 }

@@ -12,7 +12,7 @@ function() {
 					$('#responses')
 						.append($("<li>")
 							.text(data[a].name)
-							.append($('<img width="48" height="48"/>')
+							.append($('<img class="artwork"/>')
 								.attr('src', 'track/' + data[a].docNum + '/artwork')));
 				}
 			}
