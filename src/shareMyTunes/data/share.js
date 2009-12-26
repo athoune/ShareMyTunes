@@ -9,7 +9,11 @@ function() {
 			'success' : function(data) {
 				$('#responses').empty();
 				for(var a=0; a < data.length; a++) {
-					$('#responses').append($("<li>").text(data[a].name));
+					$('#responses')
+						.append($("<li>")
+							.text(data[a].name)
+							.append($('<img width="48" height="48"/>')
+								.attr('src', 'track/' + data[a].docNum + '/artwork')));
 				}
 			}
 		});

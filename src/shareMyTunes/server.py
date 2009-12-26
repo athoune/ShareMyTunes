@@ -7,6 +7,7 @@ import json
 import os.path
 import select
 import urllib
+from cStringIO import StringIO
 
 from file import File
 
@@ -88,6 +89,10 @@ class ShareMyTunes_app:
 		u = urlparse(t['location'])
 		print u.scheme
 		f = urllib.unquote(u.path)
+		if not os.path.isfile(f):
+			start_response(NOT_FOUND, [('Content-type', PLAIN)])
+			print "NOT FOUND : %s" % f
+			return ["%s not found" % track]
 		if type == 'music':
 			_, ext = os.path.splitext(f)
 			start_response(OK, [('Content-type', MIME[ext[1:]])])
@@ -96,15 +101,15 @@ class ShareMyTunes_app:
 		if type == 'data':
 			start_response(OK, [('Content-type', PLAIN)])
 			return json.dumps(t)
-		if type == 'artworks':
+		if type == 'artwork':
 			ff = File(f)
 			artwork = ff.artwork()
 			if artwork == None:
 				start_response(NOT_FOUND, [('Content-type', PLAIN)])
-				return
+				return ["No artwork for %s" % track]
 			print artwork.mime
 			start_response(OK, [('Content-type', str(artwork.mime))])
-			return artwork.data
+			return FileWrapper(StringIO(artwork.data))
 
 def register_callback(sdRef, flags, errorCode, name, regtype, domain):
 	if errorCode == pybonjour.kDNSServiceErr_NoError:
