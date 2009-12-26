@@ -11,6 +11,13 @@ from index import Index
 __author__ = "mlecarme"
 __version__ = "0.1"
 
+"""
+[TODO] opensearch XML format
+[TODO] woosh spell checking
+[TODO] artwork display
+[TODO] 
+"""
+
 OK = '200 OK'
 NOT_FOUND = '404 NOT FOUND'
 PLAIN = 'text/plain'
@@ -21,7 +28,8 @@ MIME = {
 	'js'  :'application/x-javascript',
 	'html':'text/html',
 	'ico' :'image/x-icon',
-	'png' :'image/png'
+	'png' :'image/png',
+	'swf' :'application/x-shockwave-flash'
 }
 
 class ShareMyTunes_app:

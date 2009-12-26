@@ -5,6 +5,10 @@ from genshi.input import XMLParser, START, TEXT, END
 __author__ = "mlecarme"
 __version__ = "0.1"
 
+"""
+[TODO] indexing artworks
+[TODO] neutral index, with mutagen and recursive path exploring
+"""
 class ItunesParser:
 	"""
 	Event based iTunes XML parser
