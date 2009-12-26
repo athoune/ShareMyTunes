@@ -61,7 +61,8 @@ class ShareMyTunes_app:
 			r, ext = os.path.splitext(f)
 			start_response(OK, [('Content-type', MIME[ext[1:]])])
 			return FileWrapper(open(f, 'r'))
-
+		if uris[0] == 'track':
+			return self.track(start_response, uris[1])
 		# The returned object is going to be printed
 		start_response(OK, [('Content-type', PLAIN)])
 		return ["Hello iTunes"]
@@ -69,11 +70,19 @@ class ShareMyTunes_app:
 		start_response(OK, [('Content-type', PLAIN)])
 		response = self.index.query(unicode(query['q'][0]))
 		tas = []
+		cpt = 0
 		for r in response:
 			print r
+			r['docNum'] = response.docnum(cpt)
 			tas.append(r)
+			cpt += 1
 		print tas
 		return json.dumps(tas)
+	def track(self, start_response, track):
+		start_response(OK, [('Content-type', PLAIN)])
+		t = self.index.reader.stored_fields(int(track))
+		print t
+		return json.dumps(t)
 
 def register_callback(sdRef, flags, errorCode, name, regtype, domain):
 	if errorCode == pybonjour.kDNSServiceErr_NoError:
