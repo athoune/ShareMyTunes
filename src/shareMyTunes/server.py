@@ -6,6 +6,9 @@ from urlparse import urlparse, parse_qs
 import json
 import os.path
 import select
+import urllib
+
+from file import File
 
 import pybonjour
 
@@ -32,7 +35,9 @@ MIME = {
 	'html':'text/html',
 	'ico' :'image/x-icon',
 	'png' :'image/png',
-	'swf' :'application/x-shockwave-flash'
+	'swf' :'application/x-shockwave-flash',
+	'mp3' :'audio/mpeg',
+	'm4a' :'audio/mpeg'
 }
 
 class ShareMyTunes_app:
@@ -62,7 +67,7 @@ class ShareMyTunes_app:
 			start_response(OK, [('Content-type', MIME[ext[1:]])])
 			return FileWrapper(open(f, 'r'))
 		if uris[0] == 'track':
-			return self.track(start_response, uris[1])
+			return self.track(start_response, uris[1], uris[2])
 		# The returned object is going to be printed
 		start_response(OK, [('Content-type', PLAIN)])
 		return ["Hello iTunes"]
@@ -78,11 +83,28 @@ class ShareMyTunes_app:
 			cpt += 1
 		print tas
 		return json.dumps(tas)
-	def track(self, start_response, track):
-		start_response(OK, [('Content-type', PLAIN)])
+	def track(self, start_response, track, type = 'data'):
 		t = self.index.reader.stored_fields(int(track))
-		print t
-		return json.dumps(t)
+		u = urlparse(t['location'])
+		print u.scheme
+		f = urllib.unquote(u.path)
+		if type == 'music':
+			_, ext = os.path.splitext(f)
+			start_response(OK, [('Content-type', MIME[ext[1:]])])
+			print "serving %s as %s" % (f, ext)
+			return FileWrapper(open(f, 'r'))
+		if type == 'data':
+			start_response(OK, [('Content-type', PLAIN)])
+			return json.dumps(t)
+		if type == 'artworks':
+			ff = File(f)
+			artwork = ff.artwork()
+			if artwork == None:
+				start_response(NOT_FOUND, [('Content-type', PLAIN)])
+				return
+			print artwork.mime
+			start_response(OK, [('Content-type', str(artwork.mime))])
+			return artwork.data
 
 def register_callback(sdRef, flags, errorCode, name, regtype, domain):
 	if errorCode == pybonjour.kDNSServiceErr_NoError:
