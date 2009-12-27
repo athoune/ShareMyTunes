@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
-from mutagen.id3 import ID3
+import os.path
+
+from mutagen.id3 import ID3, ID3NoHeaderError
+
+from filter import Filter
 
 __author__ = "mlecarme"
 __version__ = "0.1"
@@ -11,6 +15,12 @@ __version__ = "0.1"
 
 http://code.google.com/p/mutagen/wiki/Tutorial
 """
+class Dummy:
+	"""
+	A fake id3 object
+	"""
+	def get(self, key):
+		return None
 
 class File:
 	"""File with id3
@@ -20,7 +30,10 @@ class File:
 		self._id3 = None
 	def id3(self):
 		if self._id3 == None:
-			self._id3 = ID3(self.path)
+			try:
+				self._id3 = ID3(self.path)
+			except ID3NoHeaderError:
+				self._id3 = Dummy()
 		return self._id3
 	def artwork(self):
 		"artwork (png or jpg)"
@@ -28,6 +41,17 @@ class File:
 	def cddb(self):
 		"cddb id tag"
 		return self.id3().get(u"COMM:iTunes_CDDB_IDs:'eng'")
+
+class ID3Filter(Filter):
+	def filter(self, item):
+		if item.has_key('path'):
+			f = File(item['path'])
+			item['artwork'] = f.artwork() != None
+			_, ext = os.path.splitext(item['path'])
+			item['extension'] = ext[1:]
+		else:
+			item['artwork'] = False
+		return item
 
 if __name__ == '__main__':
 	import sys
