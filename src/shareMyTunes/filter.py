@@ -25,7 +25,7 @@ class Filter(object):
 
 class AutoFilter(Filter):
 	"""
-	Filter build with a function
+	Filter built with a function
 	"""
 	def __init__(self, filter):
 		Filter.__init__(self)
