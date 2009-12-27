@@ -28,3 +28,10 @@ Testing
   python server.py
 
 You can test it here : http://localhost:8000
+
+To do
+=====
+
+- Abstract music db parsing, not only iTunes XML
+- Search track, album and artist
+- Multiple server query, with bonjour

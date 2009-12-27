@@ -7,7 +7,6 @@ __version__ = "0.1"
 
 """
 [TODO] indexing artworks
-[TODO] neutral index, with mutagen and recursive path exploring
 """
 class ItunesParser:
 	"""

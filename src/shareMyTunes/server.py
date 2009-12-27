@@ -23,8 +23,6 @@ __version__ = "0.1"
 """
 [TODO] opensearch XML format
 [TODO] woosh spell checking
-[TODO] artwork display
-[TODO] 
 """
 
 OK = '200 OK'

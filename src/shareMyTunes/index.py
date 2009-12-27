@@ -43,9 +43,10 @@ class Index:
 		track_number, date_modified, date_added, bit_rate, sample_rate,
 		persistant_id, track_type, location, file_folder_count, 
 		library_folder_count):
-			self.writer.add_document(trackId = trackId, name=name,
-				artist=artist, album=album, genre=genre, location=location)
-			self.writer.commit()
+			if name != None and artist != None and album != None:
+				self.writer.add_document(trackId = trackId, name=name,
+					artist=artist, album=album, genre=genre, location=location)
+				self.writer.commit()
 	def query(self, query):
 		q = self.parser.parse(query)
 		print q
