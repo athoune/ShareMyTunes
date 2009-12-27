@@ -45,6 +45,40 @@ no_accent = charset_table_to_dict(default_charset)
 for a in " /\\:":
 	no_accent[ord(a)] = u'_'
 
+class JsonList:
+	def __init__(self, list):
+		self.list = list
+		self.length = len(list)
+	def __iter__(self):
+		yield '['
+		i = self.length
+		for a in self.list:
+			yield json.dumps(a, separators=(',', ':'))
+			if i > 1:
+				yield ","
+			i -= 1
+		yield ']'
+
+class JsonResponse:
+	def __init__(self, response):
+		self.response = response
+		self.length = len(response)
+	def __iter__(self):
+		yield '['
+		cpt = 0
+		for r in self.response:
+			cpt += 1
+			r['docNum'] = self.response.docnum(cpt-1)
+			r['clean_path'] = "%s/%s/%s" % (
+				r['artist'].translate(no_accent), 
+				r['album'].translate(no_accent),
+				r['name'].translate(no_accent))
+			del r['location']
+			yield json.dumps(r, separators=(',', ':'))
+			if cpt < self.length:
+				yield ","
+		yield ']'
+
 class ShareMyTunes_app:
 	def __init__(self, db='~/Music/iTunes/iTunes Music Library.xml'):
 		self.index = Index(db)
@@ -79,22 +113,7 @@ class ShareMyTunes_app:
 	def query(self, start_response, query, header = None):
 		start_response(OK, [('Content-type', PLAIN)])
 		response = self.index.query(unicode(query['q'][0]))
-		tas = []
-		cpt = 0
-		for r in response:
-			print r
-			r['docNum'] = response.docnum(cpt)
-			r['clean_path'] = "%s/%s/%s" % (
-				r['artist'].translate(no_accent), 
-				r['album'].translate(no_accent),
-				r['name'].translate(no_accent))
-			print r
-			del r['location']
-			tas.append(r)
-			cpt += 1
-		print tas
-		#[TODO] iterator
-		return json.dumps(tas)
+		return JsonResponse(response)
 	def track(self, start_response, track, type = 'data'):
 		t = self.index.reader.stored_fields(int(track))
 		u = urlparse(t['location'])
