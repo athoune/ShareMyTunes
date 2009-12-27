@@ -12,25 +12,36 @@ function() {
 				$('#responses').empty();
 				for(var a=0; a < data.length; a++) {
 					var link = $('<a class="music">');
-					link.attr('href', 'track/' + data[a].docNum + '/music');
+					link.attr('href', 'track/' + data[a].docNum + '/music/' + data[a].clean_path + '.mp3');
 					link.attr('id', 'track_' + data[a].docNum)
 					link.click(function() {
 						var that = $(this);
 						var id = that.attr('id');
-						if(playing != null){
-							soundManager.stop(playing);
-							playing == null;
+						if(playing != null) {
+							console.debug(playing);
+							if(playing.sID == id) {
+								playing.togglePause();
+								return false;
+							} else {
+								playing.stop();
+								playing == null;
+							}
 						}
-						if (playing != id) {
-							console.log("play " + id);
-							soundManager.play(id, that.attr('href'));
-							playing = id;
-						}
+						console.log("play " + id);
+						playing = soundManager.createSound({
+							id      :id,
+							url     :that.attr('href'),
+							onfinish:function() {
+								playing = null;
+								console.log("finishing " + id);
+							}
+						});
+						playing.play({volume:50});
 						return false;
 					});
 					$('#responses')
 						.append($("<li>")
-							.text(data[a].name).append(
+							.text(data[a].name + ' [' + data[a].album + ']').append(
 								link.append($('<img class="artwork"/>')
 									.attr('src', 'track/' + data[a].docNum + '/artwork'))));
 				}
