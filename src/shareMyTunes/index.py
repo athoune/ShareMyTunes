@@ -60,7 +60,7 @@ class Index:
 		self.ix.optimize()
 	def query(self, query):
 		q = self.parser.parse(query)
-		return self.searcher.search(q)
+		return self.searcher.search(q, sortedby=("album", "name"))
 if __name__ == '__main__':
 	import os.path
 	index = Index(os.path.expanduser('~/Music/iTunes/iTunes Music Library.xml'))
