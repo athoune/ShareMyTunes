@@ -1,14 +1,21 @@
 #!/usr/bin/env python
 
-from iTunesXML import ItunesParser
-from whoosh.fields import Schema, STORED, ID, KEYWORD, TEXT
 import os.path
+
+from whoosh.fields import Schema, STORED, ID, KEYWORD, TEXT
 from whoosh.filedb.filestore import FileStorage
-from whoosh.qparser import QueryParser
+from whoosh.qparser import MultifieldParser
+
+from iTunesXML import ItunesParser
+from file import ID3Filter
 
 __author__ = "mlecarme"
 __version__ = "0.1"
 
+def boolean(bool):
+	if bool:
+		return u"1"
+	return u"0"
 class Index:
 	def __init__(self, path, index='index'):
 		self.path = path
@@ -17,8 +24,9 @@ class Index:
 			name=TEXT(stored=True),
 			artist=TEXT(stored=True),
 			album=TEXT(stored=True),
-			genre=KEYWORD,
-			location=STORED
+			genre=KEYWORD(stored=True),
+			location=STORED,
+			artwork=KEYWORD(stored=True)
 			)
 		if not os.path.exists(index):
 			self.empty = True
@@ -27,29 +35,31 @@ class Index:
 		else:
 			self.empty = False
 			self.ix = FileStorage(index).open_index()
-		self.parser = QueryParser("name", schema = self.schema)
+		self.parser = MultifieldParser(["name", "album", "artist"], schema = self.schema)
 		self.searcher = self.ix.searcher()
 		self.reader = self.ix.reader()
 	def index(self):
 		if self.empty:
 			self.writer = self.ix.writer()
-			xml_parser = ItunesParser(self.path)
-			xml_parser.piste = self.handle_piste
-			xml_parser.parse()
+			pipe = ID3Filter()
+			#[TODO] using itunes info for artwork?
+			for track in pipe(ItunesParser(self.path)):
+				if track['album'] != None : 
+					album = track['album'].encode('ascii', 'ignore')
+				else:
+					album = ""
+				print track['artwork'], "[%s]" % album, track['name'].encode('ascii', 'ignore')
+				self.writer.add_document(
+					trackId = track['trackId'], name=track['name'],
+					artist=track['artist'], album=track['album'],
+					genre=track['genre'], location=track['location'],
+					artwork=boolean(track['artwork']))
+				self.writer.commit()
 		else :
 			print "already indexed"
 		self.ix.optimize()
-	def handle_piste(self, trackId, name, artist, album, genre, kind, size, total_time,
-		track_number, date_modified, date_added, bit_rate, sample_rate,
-		persistant_id, track_type, location, file_folder_count, 
-		library_folder_count):
-			if name != None and artist != None and album != None:
-				self.writer.add_document(trackId = trackId, name=name,
-					artist=artist, album=album, genre=genre, location=location)
-				self.writer.commit()
 	def query(self, query):
 		q = self.parser.parse(query)
-		print q
 		return self.searcher.search(q)
 if __name__ == '__main__':
 	import os.path

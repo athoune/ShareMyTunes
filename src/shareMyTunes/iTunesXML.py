@@ -1,9 +1,16 @@
 #!/usr/bin/env python
 
+import urllib
+from urlparse import urlparse
+import os.path
+
+from whoosh.support.charset import charset_table_to_dict, default_charset
 from genshi.input import XMLParser, START, TEXT, END
 
 __author__ = "mlecarme"
 __version__ = "0.1"
+
+no_accent = charset_table_to_dict(default_charset)
 
 """
 [TODO] indexing artworks
@@ -32,7 +39,7 @@ class ItunesParser:
 			print 'artiste :', artiste
 		except UnicodeEncodeError :
 			pass
-	def parse(self):
+	def __iter__(self):
 		ouvrant = None
 		indentation = 0
 		tracks = False
@@ -60,6 +67,39 @@ class ItunesParser:
 				if piste != {} and 'Persistent ID' in piste and piste['Name'] != None:
 					piste['Name'] = piste['Name'].strip(" \n\t\r")
 					if piste['Name'] != '':
+						track = {
+							'trackId'            : piste['Track ID'],
+							'name'               : piste['Name'],
+							'artist'             : piste.get('Artist', None),
+							'album'              : piste.get('Album', None),
+							'genre'              : piste.get('Genre', None),
+							'kind'               : piste.get('Kind', None),
+							'size'               : piste.get('Size', None),
+							'totalTime'          : piste.get('Total Time', None),
+							'trackNumber'        : piste.get('Track Number', None),
+							'dateModified'       : piste.get('Date Modified', None),
+							'dateAdded'          : piste.get('Date Added', None),
+							'bitRate'            : piste.get('Bit Rate', None),
+							'sampleRate'         : piste.get('Sample Rate', None),
+							'persistentID'       : piste['Persistent ID'],
+							'trackType'          : piste.get('Track Type', None),
+							'location'           : piste.get('Location', None),
+							'fileFolderCount'    : piste.get('File Folder Count', None),
+							'libraryFolderCount' : piste.get('Library Folder Count', None)
+						}
+						'''
+						track['cleanPath'] = "%s/%s/%s" % (
+							track['artist'].translate(no_accent), 
+							track['album'].translate(no_accent),
+							track['name'].translate(no_accent))
+						'''
+						if track['location'] != None:
+							url = urlparse(track['location'])
+							path = urllib.unquote(url.path)
+							if url.scheme == 'file' and os.path.isfile(path) :
+								track['path'] = path
+						yield track
+						"""
 						self.piste(
 							piste['Track ID'],
 							piste['Name'],
@@ -86,6 +126,7 @@ class ItunesParser:
 						if 'Album' in piste and piste['Album'] not in albums:
 							albums.add(piste['Album'])
 							self.album(piste['Album'])
+						"""
 				piste = {}
 			if ouvrant != 'key' and kind == TEXT and valeur and indentation == 5:
 				#print "	 ", key, ":(", ouvrant, ")", unicode(data).encode('latin1', 'ignore')
@@ -95,5 +136,7 @@ class ItunesParser:
 if __name__ == '__main__':
 	import os.path
 	parser = ItunesParser(os.path.expanduser('~/Music/iTunes/iTunes Music Library.xml'))
-	parser.parse()
+	for a in parser:
+		print a
+	#parser.parse()
 	
