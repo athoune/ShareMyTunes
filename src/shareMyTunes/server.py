@@ -89,9 +89,11 @@ class ShareMyTunes_app:
 				r['album'].translate(no_accent),
 				r['name'].translate(no_accent))
 			print r
+			del r['location']
 			tas.append(r)
 			cpt += 1
 		print tas
+		#[TODO] iterator
 		return json.dumps(tas)
 	def track(self, start_response, track, type = 'data'):
 		t = self.index.reader.stored_fields(int(track))
