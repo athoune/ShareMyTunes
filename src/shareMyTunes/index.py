@@ -26,6 +26,8 @@ class Index:
 			album=TEXT(stored=True),
 			genre=KEYWORD(stored=True),
 			location=STORED,
+			trackNumber=STORED,
+			bitRate=ID(stored=True),
 			artwork=KEYWORD(stored=True)
 			)
 		if not os.path.exists(index):
@@ -53,7 +55,9 @@ class Index:
 					trackId = track['trackId'], name=track['name'],
 					artist=track['artist'], album=track['album'],
 					genre=track['genre'], location=track['location'],
-					artwork=boolean(track['artwork']))
+					artwork=boolean(track['artwork']),
+					trackNumber=track['trackNumber'], bitRate=track['bitRate']
+				)
 				self.writer.commit()
 		else :
 			print "already indexed"
