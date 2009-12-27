@@ -9,6 +9,8 @@ import select
 import urllib
 from cStringIO import StringIO
 
+from whoosh.support.charset import charset_table_to_dict, default_charset
+
 from file import File
 
 import pybonjour
@@ -40,6 +42,10 @@ MIME = {
 	'mp3' :'audio/mpeg',
 	'm4a' :'audio/mpeg'
 }
+
+no_accent = charset_table_to_dict(default_charset)
+for a in " /\\:":
+	no_accent[ord(a)] = u'_'
 
 class ShareMyTunes_app:
 	def __init__(self, db='~/Music/iTunes/iTunes Music Library.xml'):
@@ -80,6 +86,11 @@ class ShareMyTunes_app:
 		for r in response:
 			print r
 			r['docNum'] = response.docnum(cpt)
+			r['clean_path'] = "%s/%s/%s" % (
+				r['artist'].translate(no_accent), 
+				r['album'].translate(no_accent),
+				r['name'].translate(no_accent))
+			print r
 			tas.append(r)
 			cpt += 1
 		print tas
