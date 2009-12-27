@@ -39,11 +39,13 @@ function() {
 						playing.play({volume:50});
 						return false;
 					});
-					$('#responses')
-						.append($("<li>")
-							.text(data[a].name + ' [' + data[a].album + ']').append(
-								link.append($('<img class="artwork"/>')
-									.attr('src', 'track/' + data[a].docNum + '/artwork'))));
+					link.text(data[a].name + ' [' + data[a].album + ']');
+					if(data[a].artwork == "1") {
+						link.append($('<img class="artwork"/>')
+							.attr('src', 'track/' + data[a].docNum + '/artwork'))
+					}
+					$('#responses').append(
+						$("<li>").append(link));
 				}
 			}
 		});
