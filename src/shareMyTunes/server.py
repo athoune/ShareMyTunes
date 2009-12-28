@@ -42,8 +42,8 @@ MIME = {
 }
 
 no_accent = charset_table_to_dict(default_charset)
-for a in " /\\:":
-	no_accent[ord(a)] = u'_'
+for letter in iter(" /\\:"):
+	no_accent[ord(letter)] = u'_'
 
 class JsonList:
 	def __init__(self, list):
@@ -52,8 +52,8 @@ class JsonList:
 	def __iter__(self):
 		yield '['
 		i = self.length
-		for a in self.list:
-			yield json.dumps(a, separators=(',', ':'))
+		for elem in self.list:
+			yield json.dumps(elem, separators=(',', ':'))
 			if i > 1:
 				yield ","
 			i -= 1

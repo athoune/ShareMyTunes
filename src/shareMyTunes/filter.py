@@ -16,8 +16,8 @@ class Filter(object):
 		return item
 	def __iter__(self):
 		for a in self.iter:
-			for filter in self.filters:
-				a = filter.filter(a)
+			for f in self.filters:
+				a = f.filter(a)
 			yield a
 	def __or__(self, other):
 		self.filters.append(other)
