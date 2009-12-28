@@ -1,4 +1,5 @@
 #!/bin/sh
 
 cd $(dirname "$0")
-python shareMyTunes/server.py
+python -c 'from shareMyTunes.server import local
+local()'

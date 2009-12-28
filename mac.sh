@@ -12,4 +12,6 @@ cp -rv src/shareMyTunes/data dist/demo/shareMyTunes/
 find dist/demo -name "*.pyc" -exec rm {} \;
 find dist/demo -name ".DS_Store" -exec rm {} \;
 cp -av shareMyTunes.command dist/demo/
+rm -r dist/demo/shareMyTunes/index
 
+cd dist && zip -rv demo.zip demo/*
