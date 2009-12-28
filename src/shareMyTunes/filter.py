@@ -9,16 +9,17 @@ class Filter(object):
 	"""
 	def __init__(self):
 		self.filters = [self]
-	def __call__(self, iter):
-		self.iter = iter
+	def __call__(self, it):
+		self.iter = it
 		return self
 	def filter(self, item):
+		"overide me"
 		return item
 	def __iter__(self):
-		for a in self.iter:
-			for f in self.filters:
-				a = f.filter(a)
-			yield a
+		for it in self.iter:
+			for filt in self.filters:
+				it = filt.filter(it)
+			yield it
 	def __or__(self, other):
 		self.filters.append(other)
 		return self
@@ -27,15 +28,15 @@ class AutoFilter(Filter):
 	"""
 	Filter built with a function
 	"""
-	def __init__(self, filter):
+	def __init__(self, filt):
 		Filter.__init__(self)
-		self._filter = filter
+		self._filter = filt
 	def filter(self, item):
 		return self._filter(item)
 
 if __name__ == '__main__':
-	def f(str):
-		return str.lower()
+	def f(string):
+		return string.lower()
 	class StarFilter(Filter):
 		def filter(self, item):
 			return "* %s" % item
@@ -43,9 +44,9 @@ if __name__ == '__main__':
 		def filter(self, item):
 			return "- %s" % item
 	test = ["Pim", "Pam", "Poum"]
-	a = AutoFilter(f) | StarFilter() | DotFilter()
-	for i in a(iter(test)):
+	filtr = AutoFilter(f) | StarFilter() | DotFilter()
+	for i in filtr(iter(test)):
 		print i
-	a = AutoFilter(f) | DotFilter() | StarFilter()
-	for i in a(iter(test)):
+	filtr = AutoFilter(f) | DotFilter() | StarFilter()
+	for i in filtr(iter(test)):
 		print i
