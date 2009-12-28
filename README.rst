@@ -19,6 +19,11 @@ Setup will fetch them.
 
   python setup.py build
 
+Web UI use :
+
+- jquery
+- soundmanager2
+
 Testing
 =======
 
@@ -29,9 +34,15 @@ Testing
 
 You can test it here : http://localhost:8000
 
-To do
-=====
+Features
+========
 
-- Abstract music db parsing, not only iTunes XML
-- Search track, album and artist
-- Multiple server query, with bonjour
+- ☑ Rich Web interface
+- ☑ Play music in web
+- ☐ Play complete album
+- ☑ Display artwork
+- ☑ Search track, album and artist
+- ☐ Group result by album
+- ☐ Abstract music db parsing, not only iTunes XML
+- ☐ Multiple server query, with bonjour
+- ☐ Downlaod album as a ZIP
