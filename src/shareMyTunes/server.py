@@ -67,6 +67,7 @@ class JsonResponse:
 		yield '['
 		cpt = 0
 		for r in self.response:
+			print r['name']
 			cpt += 1
 			r['docNum'] = self.response.docnum(cpt-1)
 			r['clean_path'] = "%s/%s/%s" % (
@@ -80,7 +81,7 @@ class JsonResponse:
 		yield ']'
 
 class ShareMyTunes_app:
-	def __init__(self, db='~/Music/iTunes/iTunes Music Library.xml'):
+	def __init__(self, db=os.path.expanduser('~/Music/iTunes/iTunes Music Library.xml')):
 		self.index = Index(db)
 		self.index.index()
 		self.root = os.path.dirname(__file__)
@@ -148,7 +149,7 @@ def register_callback(sdRef, flags, errorCode, name, regtype, domain):
 		print '  regtype =', regtype
 		print '  domain  =', domain
 
-if __name__ == '__main__':
+def local():
 	sdRef = pybonjour.DNSServiceRegister(name = 'Share my tunes',
 			                                     regtype = '_http._tcp',
 			                                     port = 8000,
@@ -168,4 +169,6 @@ if __name__ == '__main__':
 
 	# Serve until process is killed
 	httpd.serve_forever()
-	
+
+if __name__ == '__main__':
+	local()
