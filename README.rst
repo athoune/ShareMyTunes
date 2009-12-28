@@ -39,10 +39,10 @@ Features
 
 - ☑ Rich Web interface
 - ☑ Play music in web
--  ☐ Play complete album
+- _ Play complete album
 - ☑ Display artwork
 - ☑ Search track, album and artist
--  ☐ Group result by album
--  ☐ Abstract music db parsing, not only iTunes XML
--  ☐ Multiple server query, with bonjour
--  ☐ Downlaod album as a ZIP
+- _ Group result by album
+- _ Abstract music db parsing, not only iTunes XML
+- _ Multiple server query, with bonjour
+- _ Downlaod album as a ZIP
