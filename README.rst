@@ -37,11 +37,11 @@ You can test it here : http://localhost:8000
 Features
 ========
 
-- ☑ Rich Web interface
-- ☑ Play music in web
+- x Rich Web interface
+- x Play music in web
 - _ Play complete album
-- ☑ Display artwork
-- ☑ Search track, album and artist
+- x Display artwork
+- x Search track, album and artist
 - _ Group result by album
 - _ Abstract music db parsing, not only iTunes XML
 - _ Multiple server query, with bonjour
