@@ -1,0 +1,4 @@
+#!/usr/bin/python
+
+from shareMyTunes.server import local
+local()
