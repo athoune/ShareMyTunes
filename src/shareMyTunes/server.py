@@ -38,7 +38,8 @@ MIME = {
 	'png' :'image/png',
 	'swf' :'application/x-shockwave-flash',
 	'mp3' :'audio/mpeg',
-	'm4a' :'audio/mpeg'
+	'm4a' :'audio/mpeg',
+	'zip' :'application/zip'
 }
 
 no_accent = charset_table_to_dict(default_charset)
