@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os.path
+import sys
 
 from whoosh.fields import Schema, STORED, ID, KEYWORD, TEXT
 from whoosh.filedb.filestore import FileStorage
@@ -30,7 +31,8 @@ class Index:
 			bitRate=ID(stored=True),
 			artwork=KEYWORD(stored=True)
 			)
-		os.makedirs(folder)
+		if not os.path.exists(folder):
+			os.makedirs(folder)
 		index = "%s/index" % folder
 		if not os.path.exists(index):
 			self.empty = True
@@ -47,12 +49,16 @@ class Index:
 			self.writer = self.ix.writer()
 			pipe = ID3Filter()
 			#[TODO] using itunes info for artwork?
+			cpt = 0
 			for track in pipe(ItunesParser(self.path)):
 				if track['album'] != None : 
 					album = track['album'].encode('ascii', 'ignore')
 				else:
 					album = ""
-				print track['artwork'], "[%s]" % album, track['name'].encode('ascii', 'ignore')
+				#print track['artwork'], "[%s]" % album, track['name'].encode('ascii', 'ignore')
+				if cpt % 20 == 0:
+					sys.stdout.write("\n%i " %cpt)
+				sys.stdout.write('#')
 				self.writer.add_document(
 					trackId = track['trackId'], name=track['name'],
 					artist=track['artist'], album=track['album'],
@@ -60,7 +66,11 @@ class Index:
 					artwork=boolean(track['artwork']),
 					trackNumber=track['trackNumber'], bitRate=track['bitRate']
 				)
-				self.writer.commit()
+				if cpt % 100 == 0:
+					self.writer.commit()
+				cpt += 1
+			print "\n\n%i tracks indexed" % cpt
+			self.writer.commit()
 		else :
 			print "already indexed"
 		self.ix.optimize()
