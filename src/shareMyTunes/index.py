@@ -17,7 +17,7 @@ def boolean(bool):
 		return u"1"
 	return u"0"
 class Index:
-	def __init__(self, path, index='index'):
+	def __init__(self, path, folder=os.path.expanduser('~/Library/Application Support/Share my tunes')):
 		self.path = path
 		self.schema = Schema(
 			trackId = ID(stored=True),
@@ -30,9 +30,11 @@ class Index:
 			bitRate=ID(stored=True),
 			artwork=KEYWORD(stored=True)
 			)
+		os.makedirs(folder)
+		index = "%s/index" % folder
 		if not os.path.exists(index):
 			self.empty = True
-			os.mkdir(index)
+			os.makedirs(index)
 			self.ix = FileStorage(index).create_index(self.schema)
 		else:
 			self.empty = False
