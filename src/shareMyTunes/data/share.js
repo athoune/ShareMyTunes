@@ -12,6 +12,8 @@ function() {
 				$('#responses').empty();
 				for(var a=0; a < data.length; a++) {
 					var link = $('<a>');
+					link.data('album', data[a].album);
+					link.data('name', data[a].name);
 					link.attr('href', 'track/' + data[a].docNum + '/music/' + data[a].clean_path + '.mp3');
 					link.attr('id', 'track_' + data[a].docNum)
 					link.click(function() {
@@ -38,6 +40,22 @@ function() {
 						});
 						playing.play({volume:50});
 						return false;
+					});
+					link.mouseover(function(e) {
+						var that = $(this);
+						$('#hover')
+							.empty()
+							.append($('<div class="album">').text(that.data('album')))
+							.append($('<div class="name">').text(that.data('name')))
+							.show()
+							.css('position', 'absolute')
+							.css('background-color', 'gray')
+							.css('font-size', '0.75em')
+							.css('z-index', '500')
+							.css('left',e.pageX)
+							.css('top',e.pageY);
+					}).mouseout(function() {
+						$('#hover').hide();
 					});
 					link.text(data[a].name + ' [' + data[a].album + ']');
 					var song = $('<li class="jewel">');
