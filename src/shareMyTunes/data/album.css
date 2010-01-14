@@ -1,0 +1,116 @@
+body{
+	
+	background:#1a1a1a;
+	color:white;
+	font-family:"Gill Sans","Gill Sans MT","Lucida Grande",Tahoma,Verdana,sans-serif;
+	font-size:1.1em;
+	line-height:1.4;	
+	padding:2em;			
+
+}
+
+a {
+	color: silver;
+	
+}
+
+#footer {
+	font-size: 0.75em;
+	clear: both;
+}
+#controls{
+	margin-bottom:1.75em;
+}
+#controls input{
+	vertical-align:middle;				
+}
+#controls label{
+	color:#CCC;
+	text-transform:uppercase;
+	font-size:0.85em;
+	vertical-align:middle;
+	padding:0 .65em 0 0.15em;
+}
+
+
+ul.music,
+ul.music li,
+ul.music li a,
+ul.music li img{
+	margin:0;
+	padding:0;
+	list-style:none;
+	border:0;
+	text-decoration:none;
+}
+ul.music li{
+	margin:15px 15px 15px 0;
+	float:left;
+	position:relative;
+}
+ul.music li a{
+	display:block;
+	position:relative;
+	float:left;	
+	width:80px;
+	height:80px;
+	text-indent:-1000em;
+	overflow:hidden;
+	z-index:1;						
+}
+ul.music li img{
+	position:absolute;
+	width:80px;
+	height:80px;
+	border:0;
+}
+
+/* Jewel Case */
+ul.music li.jewel img{
+	width:72px;
+	height:72px;
+	top:3px;
+	left:12px;
+}			
+ul.music li.jewel a{
+	background:url(jewel.png) 0 0 no-repeat;
+	width:90px;
+	height:82px;							
+}
+ul.music li.jewel{
+	background:url(blank_insert.gif) 12px 3px no-repeat;							
+}
+
+
+/* Vinyl Sleeve */
+ul.music li.vinyl img{
+	width:72px;
+	height:72px;
+	left:2px;
+	top:1px;
+}			
+ul.music li.vinyl a{
+	background:url(vinyl.png) 0 0 no-repeat;
+	width:96px;
+	height:76px;							
+}
+ul.music li.vinyl{
+	background:url(vinyl_insert.gif) 2px 1px no-repeat;							
+}
+
+
+/* Compact Disc */
+ul.music li.cd img,
+ul.music li.cd a{
+	width:82px;
+	height:82px;
+	top:0;
+	left:0;
+}			
+ul.music li.cd a{
+	background:url(cd.png) 0 0 no-repeat;			
+	height:86px;
+}
+ul.music li.cd{
+	background:url(blank_cd.jpg) 0 0 no-repeat;							
+}

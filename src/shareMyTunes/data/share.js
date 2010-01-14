@@ -11,7 +11,7 @@ function() {
 			'success' : function(data) {
 				$('#responses').empty();
 				for(var a=0; a < data.length; a++) {
-					var link = $('<a class="music">');
+					var link = $('<a>');
 					link.attr('href', 'track/' + data[a].docNum + '/music/' + data[a].clean_path + '.mp3');
 					link.attr('id', 'track_' + data[a].docNum)
 					link.click(function() {
@@ -40,12 +40,13 @@ function() {
 						return false;
 					});
 					link.text(data[a].name + ' [' + data[a].album + ']');
+					var song = $('<li class="jewel">');
+					song.append(link);
 					if(data[a].artwork == "1") {
-						link.append($('<img class="artwork"/>')
+						song.append($('<img/>')
 							.attr('src', 'track/' + data[a].docNum + '/artwork'))
 					}
-					$('#responses').append(
-						$("<li>").append(link));
+					$('#responses').append(song);
 				}
 			}
 		});
