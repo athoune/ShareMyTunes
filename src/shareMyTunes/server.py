@@ -36,6 +36,8 @@ MIME = {
 	'html':'text/html',
 	'ico' :'image/x-icon',
 	'png' :'image/png',
+	'jpg' :'image/jpg',
+	'gif' :'image/gif',
 	'swf' :'application/x-shockwave-flash',
 	'mp3' :'audio/mpeg',
 	'm4a' :'audio/mpeg',
@@ -69,6 +71,8 @@ class JsonResponse:
 		cpt = 0
 		for r in self.response:
 			print r['name']
+			if r['album'] == None:
+				continue
 			cpt += 1
 			r['docNum'] = self.response.docnum(cpt-1)
 			r['clean_path'] = "%s/%s/%s" % (
