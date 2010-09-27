@@ -13,7 +13,7 @@ from whoosh.support.charset import charset_table_to_dict, default_charset
 
 from file import File
 
-import pybonjour
+import bonjour
 
 from index import Index
 
@@ -147,31 +147,10 @@ class ShareMyTunes_app:
 			start_response(OK, [('Content-type', str(artwork.mime))])
 			return FileWrapper(StringIO(artwork.data))
 
-def register_callback(sdRef, flags, errorCode, name, regtype, domain):
-	if errorCode == pybonjour.kDNSServiceErr_NoError:
-		print 'Registered service:'
-		print '  name    =', name
-		print '  regtype =', regtype
-		print '  domain  =', domain
-
 def local():
-	sdRef = pybonjour.DNSServiceRegister(name = 'Share my tunes',
-			                                     regtype = '_http._tcp',
-			                                     port = 8000,
-			                                     callBack = register_callback)
-	ready = select.select([sdRef], [], [])
-	if sdRef in ready[0]:
-		pybonjour.DNSServiceProcessResult(sdRef)
-	sdRef = pybonjour.DNSServiceRegister(name = 'Share my tunes',
-		                                     	regtype = '_share_my_tunes._tcp',
-												port = 8000,
-												callBack = register_callback)
-	ready = select.select([sdRef], [], [])
-	if sdRef in ready[0]:
-		pybonjour.DNSServiceProcessResult(sdRef)
+	bonjour.broadcast()
 	httpd = make_server('', 8000, ShareMyTunes_app())
 	print "Serving on port 8000..."
-
 	# Serve until process is killed
 	httpd.serve_forever()
 
