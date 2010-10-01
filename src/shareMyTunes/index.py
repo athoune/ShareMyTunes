@@ -5,6 +5,7 @@ import sys
 
 from whoosh.fields import Schema, STORED, ID, KEYWORD, TEXT
 from whoosh.filedb.filestore import FileStorage
+import whoosh.index
 from whoosh.qparser import MultifieldParser
 
 from iTunesXML import ItunesParser
@@ -17,8 +18,9 @@ def boolean(bool):
 	if bool:
 		return u"1"
 	return u"0"
+
 class Index:
-	def __init__(self, path, folder=os.path.expanduser('~/Library/Application Support/Share my tunes')):
+	def __init__(self, path, folder='~/Library/Application Support/Share my tunes'):
 		self.path = path
 		self.schema = Schema(
 			trackId = ID(stored=True),
@@ -31,22 +33,18 @@ class Index:
 			bitRate=ID(stored=True),
 			artwork=KEYWORD(stored=True)
 			)
-		if not os.path.exists(folder):
-			os.makedirs(folder)
-		index = "%s/index" % folder
-		if not os.path.exists(index):
-			self.empty = True
-			os.makedirs(index)
-			self.ix = FileStorage(index).create_index(self.schema)
-		else:
-			self.empty = False
-			self.ix = FileStorage(index).open_index()
 		self.parser = MultifieldParser(["name", "album", "artist"], schema = self.schema)
-		self.searcher = self.ix.searcher()
-		self.reader = self.ix.reader()
+		self.folder = "%s/index" % os.path.expanduser(folder)
+		self.empty = not whoosh.index.exists_in(self.folder)
+		self.ix = None
 	def index(self):
 		if self.empty:
-			self.writer = self.ix.writer()
+			if not os.path.exists(self.folder):
+				os.makedirs(self.folder)
+			st = FileStorage(self.folder)
+			ix = st.create_index(self.schema)
+			w = ix.writer()
+			w.add_document(name = u"beuha")
 			pipe = ID3Filter()
 			#[TODO] using itunes info for artwork?
 			cpt = 0
@@ -57,26 +55,30 @@ class Index:
 					album = ""
 				#print track['artwork'], "[%s]" % album, track['name'].encode('ascii', 'ignore')
 				if cpt % 20 == 0:
-					sys.stdout.write("\n%i " %cpt)
-				sys.stdout.write('#')
-				self.writer.add_document(
-					trackId = track['trackId'], name=track['name'],
-					artist=track['artist'], album=track['album'],
+					print "\n%i " %cpt,
+				print '#',
+				#print track['album'], track['name']
+				w.add_document(
+					trackId = track['trackId'], name=track['name']
+					,artist=track['artist'], album=track['album'],
 					genre=track['genre'], location=track['location'],
 					artwork=boolean(track['artwork']),
 					trackNumber=track['trackNumber'], bitRate=track['bitRate']
 				)
-				if cpt % 100 == 0:
-					self.writer.commit()
+				#if cpt % 100 == 1:
+				#	w.commit()
 				cpt += 1
 			print "\n\n%i tracks indexed" % cpt
-			self.writer.commit()
+			w.commit()
+			ix.optimize()
+			ix.close()
 		else :
 			print "already indexed"
-		self.ix.optimize()
 	def query(self, query):
+		if self.ix == None:
+			self.ix = FileStorage(self.folder).open_index()
 		q = self.parser.parse(query)
-		return self.searcher.search(q, sortedby=("album", "name"))
+		return self.ix.searcher().search(q, sortedby=("album", "name"))
 if __name__ == '__main__':
 	import os.path
 	index = Index(os.path.expanduser('~/Music/iTunes/iTunes Music Library.xml'))
@@ -86,6 +88,6 @@ if __name__ == '__main__':
 	for response in q:
 		print "\t", response
 	#print dir(index.searcher)
-	print "Genres:", list(index.reader.lexicon('genre'))
+	#print "Genres:", list(index.reader.lexicon('genre'))
 	#print list(index.reader.most_frequent_terms("name", 5))
 
