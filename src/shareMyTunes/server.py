@@ -5,7 +5,6 @@ from wsgiref.util import request_uri, FileWrapper
 from urlparse import urlparse, parse_qs
 import json
 import os.path
-import select
 import urllib
 from cStringIO import StringIO
 
@@ -14,7 +13,6 @@ from whoosh.support.charset import charset_table_to_dict, default_charset
 from file import File
 
 import bonjour
-
 from index import Index
 
 __author__ = "mlecarme"
