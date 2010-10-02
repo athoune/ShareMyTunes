@@ -12,7 +12,6 @@ from iTunesXML import ItunesParser
 from file import ID3Filter
 
 __author__ = "mlecarme"
-__version__ = "0.1"
 
 def boolean(bool):
 	if bool:
@@ -20,8 +19,8 @@ def boolean(bool):
 	return u"0"
 
 class Index:
-	def __init__(self, path, folder='~/Library/Application Support/Share my tunes'):
-		self.path = path
+	def __init__(self, path='~/Music/iTunes/iTunes Music Library.xml', folder='~/Library/Application Support/Share my tunes'):
+		self.path = os.path.expanduser(path)
 		self.schema = Schema(
 			trackId = ID(stored=True),
 			name=TEXT(stored=True),
@@ -81,12 +80,13 @@ class Index:
 		return self.ix.searcher().search(q, sortedby=("album", "name"))
 if __name__ == '__main__':
 	import os.path
-	index = Index(os.path.expanduser('~/Music/iTunes/iTunes Music Library.xml'))
+	index = Index()
 	index.index()
 	q = index.query(u'tokyo*')
 	print "q:", dir(q)
 	for response in q:
 		print "\t", response
+	print list(index.query(u'genre:"films" OR genre:soundtrack'))
 	#print dir(index.searcher)
 	#print "Genres:", list(index.reader.lexicon('genre'))
 	#print list(index.reader.most_frequent_terms("name", 5))
