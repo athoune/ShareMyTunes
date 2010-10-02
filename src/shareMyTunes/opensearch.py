@@ -2,6 +2,8 @@
 
 __author__ = "mlecarme"
 
+from bottle import route, request, response
+
 from wsgiref.simple_server import make_server
 from wsgiref.validate import validator
 from wsgiref.util import request_uri
@@ -75,36 +77,15 @@ class OpenSearchWrapper(object):
 		yield "</feed>"
 		
 
-class Opensearchd(object):
-	def __init__(self):
-		self.index = Index()
-	def notFound(self, start_response):
-		status = '404 NOT FOUND' # HTTP Status
-		headers = [('Content-type', 'text/plain')]
-		start_response(status, headers)
-		return [' ']
-	def search(self, start_response, query):
-		search = self.index.query(unicode(query))
-		status = '200 OK' # HTTP Status
-		headers = [('Content-type', 'text/plain')]#application/atom+xml
-		start_response(status, headers)
-		return OpenSearchWrapper(query, search)
+index = Index()
 
-	def __call__(self,environ, start_response):
-		uri = urlparse(request_uri(environ))
-		if uri.path != "/":
-			return self.notFound(start_response)
-		else:
-			q = parse_qs(uri.query)
-			if 'q' not in q:
-				return self.notFound(start_response)
-			else :
-				return self.search(start_response, q['q'][0])
+@route('/opensearch')
+def search():
+	query = request.GET.get('q')
+	search = index.query(unicode(query))
+	response.content_type = 'text/plain'#application/atom+xml
+	return OpenSearchWrapper(query, search)
 
 if __name__ == '__main__':
-	osd = Opensearchd()
-	httpd = make_server('', 8001, osd)
-	print "Serving on port 8001..."
-
-	# Serve until process is killed
-	httpd.serve_forever()
+	from bottle import run
+	run(host='localhost', port=8001)
