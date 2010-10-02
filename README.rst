@@ -29,8 +29,9 @@ Testing
 
 ::
 
-  cd src/shareMyTunes
-  python server.py
+  sudo python ./setup.py install
+  shareMyTunes-index
+  shareMyTunesd
 
 You can test it here : http://localhost:8000
 
@@ -48,3 +49,4 @@ Features
 - _ Multiple server query, with bonjour
 - _ Downlaod album as a ZIP
 - _ Share ipod connected to the computer
+- X Opensearch

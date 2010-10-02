@@ -7,7 +7,7 @@ use_setuptools()
 from setuptools import setup
 
 setup(name='shareMyTunes',
-	version='0.1',
+	version='0.2',
 	license='GPL-3',
 	description='iTunes db share',
 	author='Mathieu Lecarme',
@@ -16,7 +16,7 @@ setup(name='shareMyTunes',
 	packages=['shareMyTunes'],
 	package_dir={'': 'src/'},
 	package_data={'' : ['src/shareMyTunes/data/*.*']},
-	#scripts=['src/toto'],
+	scripts=['bin/shareMyTunesd', 'bin/shareMyTunes-index'],
 	install_requires=["genshi", "whoosh", "mutagen", "pybonjour", "bottle", "opensearch"],
 	app=['src/shareMyTunes/server.py']
 )
