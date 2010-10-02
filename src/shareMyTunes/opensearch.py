@@ -14,7 +14,7 @@ class OpenSearchWrapper(object):
 		self.search = search
 		self.query = query
 	def __iter__(self):
-		yield """
+		yield u"""
 <feed xmlns="http://www.w3.org/2005/Atom" 
 	xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
 	<title>Example.com Search: {query}</title> 
@@ -43,9 +43,9 @@ class OpenSearchWrapper(object):
 		startPage=0,
 		query=self.query,
 		total=len(self.search)
-)
+).encode('utf8')
 		for s in self.search:
-			yield """
+			yield u"""
 	<entry xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
 		<title>{title}</title>
 		<link href="{link}"/>
@@ -69,9 +69,9 @@ class OpenSearchWrapper(object):
 			link=s['location'],
 			id=s['trackId'],
 			author=s['artist'],
-			category=s['genre'],
+			category=s.get('genre', ''),
 			bitrate=s.get('bitrate', 0)
-			)
+			).encode('utf8')
 		yield "</feed>"
 		
 
