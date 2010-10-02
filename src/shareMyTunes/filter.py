@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 __author__ = "mlecarme"
-__version__ = "0.1"
 
 class Filter(object):
 	"""

@@ -8,7 +8,6 @@ from whoosh.support.charset import charset_table_to_dict, default_charset
 from genshi.input import XMLParser, START, TEXT, END
 
 __author__ = "mlecarme"
-__version__ = "0.1"
 
 no_accent = charset_table_to_dict(default_charset)
 

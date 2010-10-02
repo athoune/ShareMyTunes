@@ -16,7 +16,6 @@ import bonjour
 from index import Index
 
 __author__ = "mlecarme"
-__version__ = "0.1"
 
 """
 [TODO] opensearch XML format

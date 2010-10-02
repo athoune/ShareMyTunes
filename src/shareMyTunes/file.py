@@ -7,7 +7,6 @@ from mutagen.id3 import ID3, ID3NoHeaderError
 from filter import Filter
 
 __author__ = "mlecarme"
-__version__ = "0.1"
 
 """
 [TODO] multiple artworks
