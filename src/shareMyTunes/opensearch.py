@@ -78,6 +78,9 @@ class OpenSearchWrapper(object):
 		
 
 index = Index()
+HOST = 'localhost'
+PORT = 8001
+
 
 @route('/opensearch')
 def search():
@@ -86,6 +89,19 @@ def search():
 	response.content_type = 'text/plain'#application/atom+xml
 	return OpenSearchWrapper(query, search)
 
+@route('/opensearch-description')
+def description():
+	response.content_type = 'text/plain'#application/atom+xml
+	return """<?xml version="1.0" encoding="UTF-8"?>
+	 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+	   <ShortName>Share My Tunes</ShortName>
+	   <Description>Sharing your iTunes music</Description>
+	   <Tags>iTunes mp3</Tags>
+	   <Contact>admin@example.com</Contact>
+	   <Url type="application/atom+xml" 
+	        template="http://%s:%i/opensearch?q={searchTerms}&amp;pw={startPage?}"/>
+	 </OpenSearchDescription>""" % (HOST, PORT)
+
 if __name__ == '__main__':
 	from bottle import run
-	run(host='localhost', port=8001)
+	run(host=HOST, port=PORT)
