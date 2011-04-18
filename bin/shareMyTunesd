@@ -3,7 +3,7 @@
 __author__ = "mlecarme"
 
 import sys
-import shareMyTunes.server as server
+import shareMyTunes.web.server as server
 
 server.local()
 

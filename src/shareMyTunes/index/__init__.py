@@ -8,8 +8,8 @@ from whoosh.filedb.filestore import FileStorage
 import whoosh.index
 from whoosh.qparser import MultifieldParser
 
-from iTunesXML import ItunesParser
-from file import ID3Filter
+from shareMyTunes.reader.iTunesXML import ItunesParser
+import shareMyTunes.reader.file
 
 __author__ = "mlecarme"
 
@@ -44,7 +44,7 @@ class Index:
 			ix = st.create_index(self.schema)
 			w = ix.writer()
 			w.add_document(name = u"beuha")
-			pipe = ID3Filter()
+			pipe = file.ID3Filter()
 			#[TODO] using itunes info for artwork?
 			cpt = 0
 			for track in pipe(ItunesParser(self.path)):

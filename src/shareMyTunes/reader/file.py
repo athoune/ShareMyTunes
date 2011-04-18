@@ -4,7 +4,7 @@ import os.path
 
 from mutagen.id3 import ID3, ID3NoHeaderError
 
-from filter import Filter
+from shareMyTunes.index.filter import Filter
 
 __author__ = "mlecarme"
 

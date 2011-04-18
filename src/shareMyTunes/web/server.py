@@ -10,10 +10,10 @@ from cStringIO import StringIO
 
 from whoosh.support.charset import charset_table_to_dict, default_charset
 
-from file import File
+from shareMyTunes.reader.file import File
 
 import bonjour
-from index import Index
+from shareMyTunes.index import Index
 
 __author__ = "mlecarme"
 
@@ -67,17 +67,21 @@ class JsonResponse:
 		yield '['
 		cpt = 0
 		for r in self.response:
-			print r['name']
+			rr = {}
+			for key in r:
+				rr[key] = r[key]
+			# print r['name']
 			if r['album'] == None:
 				continue
 			cpt += 1
-			r['docNum'] = self.response.docnum(cpt-1)
-			r['clean_path'] = "%s/%s/%s" % (
+			rr['docNum'] = self.response.docnum(cpt-1)
+			rr['clean_path'] = "%s/%s/%s" % (
 				r['artist'].translate(no_accent), 
 				r['album'].translate(no_accent),
 				r['name'].translate(no_accent))
-			del r['location']
-			yield json.dumps(r, separators=(',', ':'))
+			del rr['location']
+			print rr
+			yield json.dumps(rr, separators=(',', ':'))
 			if cpt < self.length:
 				yield ","
 		yield ']'
