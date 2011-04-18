@@ -7,7 +7,7 @@ use_setuptools()
 from setuptools import setup
 
 setup(name='shareMyTunes',
-	version='0.2.1',
+	version='0.2.2',
 	license='GPL-3',
 	description='iTunes db share',
 	author='Mathieu Lecarme',

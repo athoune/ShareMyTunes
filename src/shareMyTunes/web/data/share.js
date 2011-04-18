@@ -2,20 +2,22 @@ $(
 function() {
 	var soundReady = false;
 	var playing = null;
-	//console.log($("#q").val());
+	// console.log("q", $("#q").val());
 	$('#query').submit(function() {
 		$.ajax({
-			'url'     : 'query',
-			'data'    : {'q': $("#q").val()},
-			'dataType': 'json',
-			'success' : function(data) {
+			url     : 'query',
+			data    : {q: $("#q").val()},
+			dataType: 'json',
+			success : function(data, textStatus, jqXHR) {
+				// console.log(data);
 				$('#responses').empty();
 				for(var a=0; a < data.length; a++) {
 					var link = $('<a>');
+					console.log(data[a]);
 					link.data('album', data[a].album);
 					link.data('name', data[a].name);
 					link.attr('href', 'track/' + data[a].docNum + '/music/' + data[a].clean_path + '.mp3');
-					link.attr('id', 'track_' + data[a].docNum)
+					link.attr('id', 'track_' + data[a].docNum);
 					link.click(function() {
 						var that = $(this);
 						var id = that.attr('id');
@@ -62,7 +64,7 @@ function() {
 					song.append(link);
 					if(data[a].artwork == "1") {
 						song.append($('<img/>')
-							.attr('src', 'track/' + data[a].docNum + '/artwork'))
+							.attr('src', 'track/' + data[a].docNum + '/artwork'));
 					}
 					$('#responses').append(song);
 				}
@@ -87,6 +89,6 @@ function() {
 	  // Maybe configure your app to ignore sound calls.
 	  // (SM2 calls will silently return false after this point.)
 	console.log("oups");
-	}
+	};
 }
 );

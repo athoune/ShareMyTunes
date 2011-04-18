@@ -77,7 +77,7 @@ class Index:
 		if self.ix == None:
 			self.ix = FileStorage(self.folder).open_index()
 		q = self.parser.parse(query)
-		return self.ix.searcher().search(q, sortedby=("album", "name"))
+		return self.ix.searcher().search(q, sortedby=("album", "name"), limit=None)
 if __name__ == '__main__':
 	import os.path
 	index = Index()

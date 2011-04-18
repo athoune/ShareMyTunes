@@ -82,6 +82,7 @@ class JsonResponse:
 			del rr['location']
 			print rr
 			yield json.dumps(rr, separators=(',', ':'))
+			print cpt, self.length
 			if cpt < self.length:
 				yield ","
 		yield ']'
